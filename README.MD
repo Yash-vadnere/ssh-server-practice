@@ -20,4 +20,4 @@
 - Changed owner+group: sudo chown rahul:developers file.txt
 
 ## 5. SCP File Transfer
-- Transferred file: scp testfile.txt yash@192.168.1.26:/home/yash/
+- Transferred file: scp testfile.txt yash@192.168.1.26:/home/yash/ 
