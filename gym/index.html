@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unique Fitness Gym</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #1a1a1a;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --white: #f5f5f0;
+    --gray: #888880;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(10,10,10,0.92); backdrop-filter: blur(12px);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 5%; border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .logo { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--gold); }
+  .logo span { color: var(--white); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: var(--gray); text-decoration: none; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta { background: var(--gold); color: var(--black); padding: 10px 24px; border: none; font-weight: 700; letter-spacing: 1px; cursor: pointer; font-size: 13px; text-transform: uppercase; }
+
+  #home {
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(10,10,10,0.85), rgba(10,10,10,0.6)),
+      url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=80') center/cover no-repeat;
+    display: flex; align-items: center; padding: 0 5%; padding-top: 80px;
+  }
+  .hero-content { max-width: 620px; }
+  .hero-badge { display: inline-block; background: rgba(201,168,76,0.15); border: 1px solid var(--gold); color: var(--gold); padding: 6px 18px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+  .hero-title { font-size: clamp(40px, 6vw, 80px); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin-bottom: 20px; }
+  .hero-title span { color: var(--gold); }
+  .hero-sub { font-size: 18px; color: var(--gray); line-height: 1.7; margin-bottom: 36px; }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary { background: var(--gold); color: var(--black); padding: 16px 36px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; font-size: 14px; cursor: pointer; border: none; }
+  .btn-outline { background: transparent; color: var(--white); padding: 16px 36px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 14px; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); }
+  .hero-stats { display: flex; gap: 48px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .stat-num { font-size: 36px; font-weight: 900; color: var(--gold); }
+  .stat-label { font-size: 12px; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+  section { padding: 80px 5%; }
+  .section-tag { font-size: 12px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  .section-title { font-size: clamp(28px, 4vw, 48px); font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+  .section-sub { color: var(--gray); font-size: 16px; line-height: 1.7; max-width: 500px; }
+
+  #about { background: var(--dark); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; margin-top: 60px; }
+  .about-img { height: 520px; background: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80') center/cover; }
+  .about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+  .feature-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--gray); }
+  .feature-item::before { content: '✓'; color: var(--gold); font-weight: 700; }
+
+  #programs { background: var(--black); }
+  .programs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .program-card { background: var(--card); overflow: hidden; }
+  .program-img { width: 100%; height: 220px; object-fit: cover; background-size: cover; background-position: center; }
+  .program-body { padding: 24px; }
+  .program-tag { font-size: 11px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .program-name { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .program-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+  #trainers { background: var(--dark); }
+  .trainers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
+  .trainer-card { text-align: center; }
+  .trainer-img { width: 100%; height: 300px; background-size: cover; background-position: center top; margin-bottom: 20px; }
+  .trainer-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .trainer-role { font-size: 13px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  .trainer-bio { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+  #pricing { background: var(--black); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .pricing-card { background: var(--card); padding: 40px 32px; border: 1px solid rgba(255,255,255,0.07); position: relative; }
+  .pricing-card.featured { border-color: var(--gold); }
+  .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--black); font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 4px 16px; }
+  .plan-name { font-size: 14px; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  .plan-price { font-size: 52px; font-weight: 900; line-height: 1; }
+  .plan-price span { font-size: 20px; color: var(--gray); }
+  .plan-period { font-size: 13px; color: var(--gray); margin-bottom: 32px; margin-top: 4px; }
+  .plan-features { list-style: none; margin-bottom: 32px; }
+  .plan-features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; color: var(--gray); display: flex; align-items: center; gap: 10px; }
+  .plan-features li::before { content: '✓'; color: var(--gold); font-weight: 700; }
+  .btn-plan { width: 100%; padding: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 13px; cursor: pointer; }
+  .btn-plan-outline { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.2); }
+  .btn-plan-gold { background: var(--gold); color: var(--black); border: none; }
+
+  #gallery { background: var(--dark); }
+  .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 220px 220px; gap: 12px; margin-top: 48px; }
+  .gallery-item { overflow: hidden; }
+  .gallery-item:first-child { grid-column: span 2; grid-row: span 2; }
+  .gallery-item div { width: 100%; height: 100%; background-size: cover; background-position: center; }
+
+  #testimonials { background: var(--black); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .testimonial-card { background: var(--card); padding: 32px; border-left: 3px solid var(--gold); }
+  .stars { color: var(--gold); font-size: 18px; margin-bottom: 16px; }
+  .testimonial-text { font-size: 15px; color: var(--gray); line-height: 1.7; margin-bottom: 24px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--black); font-size: 16px; }
+  .author-name { font-size: 15px; font-weight: 600; }
+  .author-title { font-size: 12px; color: var(--gray); }
+
+  #contact { background: linear-gradient(135deg, rgba(10,10,10,0.95), rgba(10,10,10,0.85)), url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80') center/cover; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 60px; }
+  .contact-item { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 28px; }
+  .contact-icon { width: 44px; height: 44px; background: rgba(201,168,76,0.1); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .contact-label { font-size: 12px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .contact-value { font-size: 15px; }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label { font-size: 12px; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; }
+  .form-group input, .form-group select, .form-group textarea { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--white); padding: 14px 16px; font-size: 14px; font-family: inherit; outline: none; }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-group select option { background: var(--dark); }
+
+  footer { background: var(--dark); padding: 60px 5% 30px; border-top: 1px solid rgba(201,168,76,0.15); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-desc { font-size: 14px; color: var(--gray); line-height: 1.7; max-width: 280px; margin-top: 16px; }
+  .footer-heading { font-size: 12px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; font-weight: 700; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a { color: var(--gray); text-decoration: none; font-size: 14px; }
+  .footer-bottom { padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; }
+  .footer-copy { font-size: 13px; color: var(--gray); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">UNIQUE <span>FITNESS</span></div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#trainers">Trainers</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Join Now</button>
+</nav>
+
+<section id="home">
+  <div class="hero-content">
+    <div class="hero-badge">🏆 Nashik's #1 Premium Gym</div>
+    <h1 class="hero-title">FORGE YOUR<br><span>BEST SELF</span><br>TODAY</h1>
+    <p class="hero-sub">World-class equipment, expert trainers, and a community that pushes you beyond your limits.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Start Free Trial</button>
+      <button class="btn-outline" onclick="document.getElementById('programs').scrollIntoView({behavior:'smooth'})">View Programs</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">2000+</div><div class="stat-label">Members</div></div>
+      <div><div class="stat-num">15+</div><div class="stat-label">Trainers</div></div>
+      <div><div class="stat-num">50+</div><div class="stat-label">Equipment</div></div>
+      <div><div class="stat-num">8 Yrs</div><div class="stat-label">Experience</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-tag">About Us</div>
+  <h2 class="section-title">More Than Just a Gym.<br>A Lifestyle.</h2>
+  <p class="section-sub">Since 2016, Unique Fitness Gym has been helping Nashik achieve their fitness goals with premium facilities and personalized coaching.</p>
+  <div class="about-grid">
+    <div class="about-img"></div>
+    <div>
+      <div class="section-tag">Why Choose Us</div>
+      <h3 class="section-title" style="font-size:32px;">Elite Training.<br>Real Results.</h3>
+      <p style="color:var(--gray);line-height:1.7;margin-bottom:28px;font-size:15px;">We combine cutting-edge equipment with science-backed training programs to deliver results that last. Whether you're a beginner or a seasoned athlete, we have something for you.</p>
+      <div class="about-features">
+        <div class="feature-item">Premium Equipment</div>
+        <div class="feature-item">AC Facility</div>
+        <div class="feature-item">Personal Training</div>
+        <div class="feature-item">Diet Planning</div>
+        <div class="feature-item">Steam & Sauna</div>
+        <div class="feature-item">Locker Rooms</div>
+        <div class="feature-item">Open 5AM – 11PM</div>
+        <div class="feature-item">Free Parking</div>
+      </div>
+      <button class="btn-primary" style="margin-top:32px;" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book a Tour</button>
+    </div>
+  </div>
+</section>
+
+<section id="programs">
+  <div class="section-tag">Our Programs</div>
+  <h2 class="section-title">Train With Purpose</h2>
+  <div class="programs-grid">
+    <div class="program-card">
+      <div class="program-img" style="background-image:url('https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?w=600&q=80');"></div>
+      <div class="program-body">
+        <div class="program-tag">Strength</div>
+        <div class="program-name">Powerlifting</div>
+        <p class="program-desc">Build raw strength with structured progressive overload programming coached by certified trainers.</p>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-img" style="background-image:url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80');"></div>
+      <div class="program-body">
+        <div class="program-tag">Cardio</div>
+        <div class="program-name">HIIT & Cardio Blast</div>
+        <p class="program-desc">High-intensity interval training sessions that torch fat and spike your metabolism. 45-minute burns.</p>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-img" style="background-image:url('https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=600&q=80');"></div>
+      <div class="program-body">
+        <div class="program-tag">Mind & Body</div>
+        <div class="program-name">Yoga & Flexibility</div>
+        <p class="program-desc">Improve mobility, reduce stress, and enhance recovery with guided yoga sessions for all levels.</p>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-img" style="background-image:url('https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600&q=80');"></div>
+      <div class="program-body">
+        <div class="program-tag">Combat</div>
+        <div class="program-name">Boxing & MMA</div>
+        <p class="program-desc">Learn self-defense while getting fit. Covers boxing, kickboxing, and MMA fundamentals.</p>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-img" style="background-image:url('https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80');"></div>
+      <div class="program-body">
+        <div class="program-tag">Physique</div>
+        <div class="program-name">Bodybuilding</div>
+        <p class="program-desc">Sculpt your ideal physique with hypertrophy-focused training plans customized for your body type.</p>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-img" style="background-image:url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&q=80');"></div>
+      <div class="program-body">
+        <div class="program-tag">Beginners</div>
+        <div class="program-name">Fit Start Program</div>
+        <p class="program-desc">New to fitness? Our 8-week beginner program eases you in with guided workouts and nutrition basics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="trainers">
+  <div style="text-align:center;">
+    <div class="section-tag">Our Experts</div>
+    <h2 class="section-title">Meet Your Trainers</h2>
+  </div>
+  <div class="trainers-grid">
+    <div class="trainer-card">
+      <div class="trainer-img" style="background-image:url('https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=400&q=80');"></div>
+      <div class="trainer-name">Amit Kanse</div>
+      <div class="trainer-role">Head Strength Coach</div>
+      <p class="trainer-bio">10+ years of powerlifting experience. National-level competitor and certified NSCA strength coach.</p>
+    </div>
+    
+  </div> </section>
+
+<section id="pricing">
+  <div style="text-align:center;">
+    <div class="section-tag">Membership Plans</div>
+    <h2 class="section-title">Choose Your Plan</h2>
+    <p class="section-sub" style="margin:0 auto;">Flexible plans to fit every goal and budget. No hidden fees.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">₹799</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>Gym floor access</li>
+        <li>Locker room access</li>
+        <li>1 fitness assessment</li>
+        <li>Group classes (2/week)</li>
+      </ul>
+      <button class="btn-plan btn-plan-outline">Get Started</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">₹1,799</div>
+      <div class="plan-period">Three months Plan </div>
+      <ul class="plan-features">
+        <li>All Basic features</li>
+        <li>Unlimited group classes</li>
+        <li>4 PT sessions/month</li>
+        <li>Diet consultation</li>
+        <li>Steam & sauna access</li>
+      </ul>
+      <button class="btn-plan btn-plan-gold">Get Started</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">Elite</div>
+      <div class="plan-price">₹2,499</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>All Pro features</li>
+        <li>Unlimited PT sessions</li>
+        <li>Custom meal plan</li>
+        <li>Body composition tracking</li>
+        <li>Guest passes (2/month)</li>
+      </ul>
+      <button class="btn-plan btn-plan-outline">Get Started</button>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="section-tag">Our Facility</div>
+  <h2 class="section-title">Inside Unique Fitness</h2>
+  <div class="gallery-grid">
+    <div class="gallery-item"><div style="background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80');height:100%;"></div></div>
+    <div class="gallery-item"><div style="background-image:url('https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=600&q=80');height:220px;"></div></div>
+    <div class="gallery-item"><div style="background-image:url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&q=80');height:220px;"></div></div>
+    <div class="gallery-item"><div style="background-image:url('https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80');height:220px;"></div></div>
+    <div class="gallery-item"><div style="background-image:url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=80');height:220px;"></div></div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div style="text-align:center;">
+    <div class="section-tag">Success Stories</div>
+    <h2 class="section-title">What Our Members Say</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Lost 18kg in 5 months. The trainers here don't just count reps — they actually care about your progress. Best decision I ever made."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">SK</div>
+        <div><div class="author-name">Sanjay Kulkarni</div><div class="author-title">Member since 2022</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"As a woman, I was nervous joining a gym. The staff made me feel welcome immediately. The yoga and HIIT classes are incredible!"</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">NJ</div>
+        <div><div class="author-name">Neha Joshi</div><div class="author-title">Member since 2023</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Competed in my first bodybuilding show after training here for a year. The Elite plan's diet coaching was a game-changer."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">RP</div>
+        <div><div class="author-name">Rohit Pawar</div><div class="author-title">Member since 2021</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-tag">Get In Touch</div>
+  <h2 class="section-title">Start Your Journey Today</h2>
+  <p class="section-sub">Book a free consultation or drop by for a tour. We'd love to meet you.</p>
+  <div class="contact-grid">
+    <div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div><div class="contact-label">Location</div><div class="contact-value">2nd flor,maule hall,satpur Colony, Nashik, Maharashtra 422007</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div><div class="contact-label">Phone</div><div class="contact-value">+91 98765 43210</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div><div class="contact-label">Email</div><div class="contact-value">hello@uniquefitnessgym.in</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div><div class="contact-label">Hours</div><div class="contact-value">Mon–Sat: 5:00 AM – 10:00 AM<br>Evining: 5:00 PM – 10:00 PM</div></div>
+      </div>
+    </div>
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="Name" required></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Surname" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input type="tel" placeholder="+91 98765 43210"></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="you@email.com"></div>
+      </div>
+      <div class="form-group">
+        <label>Interested In</label>
+        <select>
+          <option>Select a program</option>
+          <option>Powerlifting</option>
+          <option>HIIT & Cardio</option>
+          <option>Yoga & Flexibility</option>
+          <option>Bodybuilding</option>
+          <option>Fit Start (Beginner)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Message</label><textarea placeholder="Tell us about your fitness goals..."></textarea></div>
+      <button type="submit" class="btn-primary">Send Message</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="logo">UNIQUE <span>FITNESS</span></div>
+      <p class="footer-desc">Nashik's premier fitness destination. Transforming lives through elite training, nutrition, and community since 2016.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Quick Links</div>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Programs</div>
+      <ul class="footer-links">
+        <li><a href="#programs">Powerlifting</a></li>
+        <li><a href="#programs">HIIT</a></li>
+        <li><a href="#programs">Yoga</a></li>
+        <li><a href="#programs">Boxing</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Follow Us</div>
+      <ul class="footer-links">
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Unique Fitness Gym, Nashik. All rights reserved.</span>
+    <span class="footer-copy">Made with ❤️ for fitness lovers</span>
+  </div>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = '✓ Message Sent!';
+    btn.style.background = '#2a9d5c';
+    setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; }, 3000);
+  }
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    nav.style.background = window.scrollY > 50 ? 'rgba(10,10,10,0.98)' : 'rgba(10,10,10,0.92)';
+  });
+</script>
+</body>
+</html>
